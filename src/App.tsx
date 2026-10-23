@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { catalogProducts } from './data/products';
 import { fetchProductsFromGoogleSheet, getCachedProducts } from './services/sheetService';
 import { Product, CartItem, SortOption } from './types/product';
@@ -279,7 +279,6 @@ export default function App() {
 
           {/* Compact Filter Bar */}
           <ProductFilters
-            categories={categories}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
             brands={brands}

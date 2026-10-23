@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CartItem } from '../types/product';
-import { X, Trash2, ShoppingBag, Send, Phone, MapPin, User } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Phone, MapPin, User } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 
 interface CartDrawerProps {

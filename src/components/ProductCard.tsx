@@ -21,10 +21,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const directMsg = encodeURIComponent(
     `Hola GRUPO RHINN, deseo consultar o hacer el pedido de:\n\n` +
-    `📦 Producto: ${product.nombre}\n` +
-    `🏷️ Modelo: ${product.modelo}\n` +
-    `✨ Condición: ${product.condicion}\n` +
-    `💰 Precio: ${product.precioTexto}` +
+    `* Producto: ${product.nombre}\n` +
+    `* Modelo: ${product.modelo}\n` +
+    `* Condición: ${product.condicion}\n` +
+    `* Precio: ${product.precioTexto}` +
     linkText
   );
   const whatsappNum = '51994516143';

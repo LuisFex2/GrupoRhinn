@@ -3,7 +3,6 @@ import { SortOption } from '../types/product';
 import { Tag, Sparkles, X } from 'lucide-react';
 
 interface ProductFiltersProps {
-  categories: string[];
   selectedCategory: string;
   onSelectCategory: (cat: string) => void;
   brands: string[];
