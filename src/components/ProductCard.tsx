@@ -14,10 +14,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const [imageFailed, setImageFailed] = React.useState(false);
 
-  const whatsappNum = '51994516143';
+  const productUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(product.modelo || product.id)}`
+    : '';
+  const imageUrl = product.thumbnailUrl || product.driveUrl || '';
+  const imageText = imageUrl ? `\n🖼️ Foto: ${imageUrl}` : '';
+  const linkText = productUrl ? `\n🔗 Ver en catálogo: ${productUrl}` : '';
+
   const directMsg = encodeURIComponent(
-    `Hola GRUPO RHINN, deseo consultar o hacer el pedido de:\n📦 Producto: ${product.nombre}\n🏷️ Modelo: ${product.modelo}\n✨ Condición: ${product.condicion}\n💰 Precio: ${product.precioTexto}`
+    `Hola GRUPO RHINN, deseo consultar o hacer el pedido de:\n\n` +
+    `📦 Producto: ${product.nombre}\n` +
+    `🏷️ Modelo: ${product.modelo}\n` +
+    `✨ Condición: ${product.condicion}\n` +
+    `💰 Precio: ${product.precioTexto}` +
+    `\n` +
+    imageText +
+    linkText
   );
+  const whatsappNum = '51994516143';
   const whatsappUrl = `https://wa.me/${whatsappNum}?text=${directMsg}`;
 
   // Category Icon Fallback

@@ -47,6 +47,55 @@ export default function App() {
   // Active full-page product (PDP view)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  // Synchronize browser URL with active product (?p=MODELO)
+  const handleSelectProduct = (prod: Product | null) => {
+    setSelectedProduct(prod);
+    if (prod) {
+      const modelSlug = prod.modelo || prod.id;
+      const newUrl = `${window.location.pathname}?p=${encodeURIComponent(modelSlug)}`;
+      window.history.pushState({ productId: prod.id }, '', newUrl);
+    } else {
+      window.history.pushState(null, '', window.location.pathname);
+    }
+  };
+
+  // Open product from URL query on initial load (?p=MODEL)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const pParam = params.get('p');
+    if (pParam && products.length > 0) {
+      const decoded = decodeURIComponent(pParam).trim().toLowerCase();
+      const found = products.find(
+        p => (p.modelo && p.modelo.toLowerCase() === decoded) || p.id.toLowerCase() === decoded
+      );
+      if (found) {
+        setSelectedProduct(found);
+      }
+    }
+  }, [products]);
+
+  // Handle browser Back / Forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const pParam = params.get('p');
+      if (pParam && products.length > 0) {
+        const decoded = decodeURIComponent(pParam).trim().toLowerCase();
+        const found = products.find(
+          p => (p.modelo && p.modelo.toLowerCase() === decoded) || p.id.toLowerCase() === decoded
+        );
+        if (found) {
+          setSelectedProduct(found);
+          return;
+        }
+      }
+      setSelectedProduct(null);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [products]);
+
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -175,7 +224,7 @@ export default function App() {
   }, [products, searchQuery, selectedCategory, selectedBrand, selectedCondition, sortOption]);
 
   const handleResetFilters = () => {
-    setSelectedProduct(null);
+    handleSelectProduct(null);
     setSearchQuery('');
     setSelectedCategory('ALL');
     setSelectedBrand('ALL');
@@ -193,7 +242,7 @@ export default function App() {
         onOpenCategories={() => setIsCategoryDrawerOpen(true)}
         searchQuery={searchQuery}
         onSearchChange={q => {
-          setSelectedProduct(null); // Return to catalog on search
+          handleSelectProduct(null); // Return to catalog on search
           setSearchQuery(q);
         }}
       />
@@ -205,9 +254,9 @@ export default function App() {
           product={selectedProduct}
           allProducts={products}
           cartItems={cartItems}
-          onBackToCatalog={() => setSelectedProduct(null)}
+          onBackToCatalog={() => handleSelectProduct(null)}
           onAddToCart={handleAddToCart}
-          onSelectProduct={setSelectedProduct}
+          onSelectProduct={handleSelectProduct}
         />
       ) : (
         /* Full Catalog View */
@@ -257,7 +306,7 @@ export default function App() {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    onOpenDetails={setSelectedProduct}
+                    onOpenDetails={handleSelectProduct}
                   />
                 ))}
               </div>
@@ -287,7 +336,7 @@ export default function App() {
         selectedCategory={selectedCategory}
         onSelectCategory={cat => {
           setSelectedCategory(cat);
-          setSelectedProduct(null);
+          handleSelectProduct(null);
         }}
         categoryCounts={categoryCounts}
         totalProductsCount={products.length}

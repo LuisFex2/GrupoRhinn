@@ -79,11 +79,34 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     };
   }, [isLightboxOpen]);
 
-  const handleShare = () => {
+  const productUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(product.modelo || product.id)}`
+    : '';
+
+  const handleShare = async () => {
+    // 1. Try Native Web Share API (Mobile, Chrome, Safari, Edge)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${product.nombre} | GRUPO RHINN`,
+          text: `Mira ${product.nombre} (${product.modelo}) - ${product.condicion} a ${product.precioTexto} en GRUPO RHINN`,
+          url: productUrl,
+        });
+        return;
+      } catch (err: any) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    // 2. Fallback: Copy direct product URL to clipboard
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2000);
+      try {
+        await navigator.clipboard.writeText(productUrl);
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2500);
+      } catch {
+        // Fallback
+      }
     }
   };
 
@@ -110,6 +133,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const oldPriceFormatted = `S/ ${referenceOldPrice.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   const commentText = comments.trim() ? `\n💬 Comentarios del cliente: ${comments.trim()}` : '';
 
+  // Direct image and store deep-link for WhatsApp preview
+  const imageUrl = product.thumbnailUrl || product.driveUrl || '';
+  const imageText = imageUrl ? `\n🖼️ Foto: ${imageUrl}` : '';
+  const linkText = productUrl ? `\n🔗 Ver en catálogo: ${productUrl}` : '';
+
   const whatsappMessage = encodeURIComponent(
     `Hola GRUPO RHINN, deseo hacer el pedido de:\n\n` +
     `📦 Producto: ${product.nombre}\n` +
@@ -117,7 +145,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     `✨ Condición: ${product.condicion}\n` +
     `🔢 Cantidad: ${quantity} unidad(es)\n` +
     `💰 Total a pagar: ${totalFormatted}` +
-    commentText
+    commentText +
+    `\n` +
+    imageText +
+    linkText
   );
 
   const whatsappUrl = `https://wa.me/${whatsappNum}?text=${whatsappMessage}`;
