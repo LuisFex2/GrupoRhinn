@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingCart, MapPin, X, Menu, RefreshCw } from 'lucide-react';
+import { Search, ShoppingCart, MapPin, X, Menu } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 
 interface NavbarProps {
@@ -9,8 +9,6 @@ interface NavbarProps {
   onOpenCategories: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  onRefresh?: () => void;
-  isRefreshing?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,8 +18,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCategories,
   searchQuery,
   onSearchChange,
-  onRefresh,
-  isRefreshing,
 }) => {
   const whatsappUrl = `https://wa.me/51994516143?text=${encodeURIComponent(
     'Hola GRUPO RHINN, quisiera consultar por su catálogo de electrodomésticos.'
@@ -107,21 +103,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
               <span>Atención WhatsApp</span>
             </a>
-
-            {/* Live Google Sheets Refresh Button */}
-            {onRefresh && (
-              <button
-                type="button"
-                onClick={onRefresh}
-                disabled={isRefreshing}
-                aria-label="Actualizar datos desde Google Sheets"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60"
-                title="Actualizar catálogo en vivo desde Google Sheet"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-indigo-600' : 'text-slate-500'}`} />
-                <span className="hidden md:inline">{isRefreshing ? 'Actualizando...' : 'Actualizar'}</span>
-              </button>
-            )}
 
             {/* Shopping Cart button with Badge */}
             <button

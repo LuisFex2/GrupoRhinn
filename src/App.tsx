@@ -217,8 +217,6 @@ export default function App() {
           setSelectedProduct(null); // Return to catalog on search
           setSearchQuery(q);
         }}
-        onRefresh={handleManualRefresh}
-        isRefreshing={isRefreshing}
       />
 
       {/* Main Content Router: Full Product Detail Page OR Catalog */}

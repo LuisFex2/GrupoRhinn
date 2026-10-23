@@ -92,6 +92,17 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                 </button>
               </span>
             )}
+
+            {/* Limpiar button - Placed immediately next to the condition options */}
+            {isFiltered && (
+              <button
+                type="button"
+                onClick={onResetFilters}
+                className="text-xs text-rose-600 hover:text-rose-800 font-semibold underline cursor-pointer shrink-0 ml-1.5"
+              >
+                Limpiar
+              </button>
+            )}
           </div>
 
           {/* Right: Brand and Sort dropdowns */}
@@ -126,16 +137,6 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
                 <option value="stock-desc">Mayor stock</option>
               </select>
             </div>
-
-            {isFiltered && (
-              <button
-                type="button"
-                onClick={onResetFilters}
-                className="text-xs text-rose-600 hover:text-rose-800 font-semibold underline cursor-pointer shrink-0 ml-0.5"
-              >
-                Limpiar
-              </button>
-            )}
           </div>
         </div>
       </div>
