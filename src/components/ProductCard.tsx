@@ -63,13 +63,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Condition Badge */}
-        <div className="absolute top-2.5 left-2.5">
+        <div className="absolute top-2.5 left-2.5 z-10">
           {product.condicion === 'De Exhibición' ? (
-            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 shadow-xs">
-              Exhibición
+            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 shadow-xs">
+              De Exhibición
             </span>
           ) : (
-            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 shadow-xs">
+            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-xs">
               Nuevo
             </span>
           )}

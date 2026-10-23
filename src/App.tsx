@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { catalogProducts } from './data/products';
+import { fetchProductsFromGoogleSheet, getCachedProducts } from './services/sheetService';
 import { Product, CartItem, SortOption } from './types/product';
 import { Navbar } from './components/Navbar';
 import { HeroBanner } from './components/HeroBanner';
@@ -13,7 +14,56 @@ import { WhatsAppIcon } from './components/WhatsAppIcon';
 import { AlertCircle } from 'lucide-react';
 
 export default function App() {
-  const [products] = useState<Product[]>(catalogProducts);
+  // Initialize with cached products if available, or bundled products as immediate fallback
+  const [products, setProducts] = useState<Product[]>(() => {
+    return getCachedProducts() || catalogProducts;
+  });
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Load latest live data from Google Sheets on initial load
+  useEffect(() => {
+    let isMounted = true;
+    const syncWithSheet = async () => {
+      try {
+        const liveProducts = await fetchProductsFromGoogleSheet();
+        if (isMounted && liveProducts.length > 0) {
+          setProducts(liveProducts);
+          // If a product is currently viewed in detail, keep it updated with live values
+          setSelectedProduct(current => {
+            if (!current) return null;
+            return liveProducts.find(p => p.id === current.id || p.modelo === current.modelo) || current;
+          });
+        }
+      } catch (err) {
+        console.warn('Could not sync with Google Sheets, using cached/local data:', err);
+      }
+    };
+
+    syncWithSheet();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleManualRefresh = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    try {
+      const liveProducts = await fetchProductsFromGoogleSheet();
+      if (liveProducts.length > 0) {
+        setProducts(liveProducts);
+        setSelectedProduct(current => {
+          if (!current) return null;
+          return liveProducts.find(p => p.id === current.id || p.modelo === current.modelo) || current;
+        });
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert('Aviso: ' + (err?.message || 'No se pudo sincronizar en este momento.'));
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // Active full-page product (PDP view)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -167,6 +217,8 @@ export default function App() {
           setSelectedProduct(null); // Return to catalog on search
           setSearchQuery(q);
         }}
+        onRefresh={handleManualRefresh}
+        isRefreshing={isRefreshing}
       />
 
       {/* Main Content Router: Full Product Detail Page OR Catalog */}

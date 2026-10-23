@@ -19,6 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { ProductCard } from './ProductCard';
 
 interface ProductDetailPageProps {
   product: Product;
@@ -421,47 +422,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
               {relatedProducts.map(rel => (
-                <div
+                <ProductCard
                   key={rel.id}
-                  onClick={() => onSelectProduct(rel)}
-                  className="bg-white border border-slate-200 rounded-xl p-4 hover:border-indigo-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group"
-                >
-                  <div className="aspect-4/3 bg-slate-50 rounded-lg p-3 flex items-center justify-center mb-3">
-                    {rel.thumbnailUrl ? (
-                      <img
-                        src={rel.thumbnailUrl}
-                        alt={rel.nombre}
-                        referrerPolicy="no-referrer"
-                        className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform"
-                      />
-                    ) : (
-                      <span className="text-xs font-bold text-slate-400 font-mono">{rel.marca}</span>
-                    )}
-                  </div>
-
-                  <div>
-                    <div className="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">
-                      {rel.marca}
-                    </div>
-                    <div className="text-xs font-bold text-slate-900 line-clamp-1 mt-0.5 group-hover:text-indigo-600">
-                      {rel.nombre}
-                    </div>
-                    <div className="text-[11px] text-slate-400 font-mono mt-0.5">
-                      {rel.modelo}
-                    </div>
-                  </div>
-
-                  <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
-                    <span className="font-mono tabular-nums font-bold text-slate-900 text-sm">
-                      {rel.precioTexto}
-                    </span>
-                    <span className="text-[11px] font-semibold text-emerald-600 group-hover:underline">
-                      Pedir →
-                    </span>
-                  </div>
-                </div>
+                  product={rel}
+                  onOpenDetails={onSelectProduct}
+                />
               ))}
             </div>
           </div>
