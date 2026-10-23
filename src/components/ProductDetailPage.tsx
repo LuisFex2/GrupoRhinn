@@ -451,7 +451,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] p-3 sm:p-6 flex items-center justify-center overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            {/* Top-Right Clean Close X (Floating, doesn't block the image) */}
+            {/* Top-Right Close Button - Prominent red-bordered circle for maximum visibility on all backgrounds */}
             <button
               type="button"
               onClick={() => {
@@ -459,9 +459,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 setIsZoomed(false);
               }}
               aria-label="Cerrar ampliación"
-              className="absolute top-3 right-3 z-30 p-2 rounded-full bg-slate-900/10 hover:bg-slate-900/20 text-slate-700 hover:text-slate-900 transition-colors cursor-pointer shadow-xs"
+              title="Cerrar (Esc)"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border-2 border-rose-500 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 stroke-[2.5]" />
             </button>
 
             {/* Scrollable / Zoomable image viewport (Takes 100% of height, nothing covering top) */}

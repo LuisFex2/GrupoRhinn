@@ -18,7 +18,6 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>(() => {
     return getCachedProducts() || catalogProducts;
   });
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Load latest live data from Google Sheets on initial load
   useEffect(() => {
@@ -44,26 +43,6 @@ export default function App() {
       isMounted = false;
     };
   }, []);
-
-  const handleManualRefresh = async () => {
-    if (isRefreshing) return;
-    setIsRefreshing(true);
-    try {
-      const liveProducts = await fetchProductsFromGoogleSheet();
-      if (liveProducts.length > 0) {
-        setProducts(liveProducts);
-        setSelectedProduct(current => {
-          if (!current) return null;
-          return liveProducts.find(p => p.id === current.id || p.modelo === current.modelo) || current;
-        });
-      }
-    } catch (err: any) {
-      console.error(err);
-      alert('Aviso: ' + (err?.message || 'No se pudo sincronizar en este momento.'));
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
 
   // Active full-page product (PDP view)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
