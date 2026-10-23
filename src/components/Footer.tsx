@@ -53,8 +53,8 @@ export const Footer: React.FC = () => {
 
       {/* Main Footer links and info */}
       <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="space-y-3 md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start justify-between">
+          <div className="space-y-3 md:col-span-7 lg:col-span-8">
             <div className="inline-flex items-center bg-white px-3 py-1.5 rounded-lg shadow-xs">
               <img
                 src="/assets/aistudio/logo-rhinn_0187ef6a.png"
@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
                 className="h-7 sm:h-8 w-auto object-contain"
               />
             </div>
-            <p className="text-xs text-slate-400 max-w-md leading-relaxed">
+            <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
               Venta y liquidación oficial de electrodomésticos, televisores y línea blanca. Atención personalizada y pedidos directos por WhatsApp para entrega inmediata en Lima y provincias.
             </p>
             <div className="text-xs text-slate-500 font-mono">
@@ -70,36 +70,18 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-white mb-3">
-              Marcas en Catálogo
-            </div>
-            <div className="grid grid-cols-2 gap-1.5 text-xs text-slate-400">
-              <span>LG Electronics</span>
-              <span>Samsung</span>
-              <span>Indurama</span>
-              <span>TCL</span>
-              <span>Hisense</span>
-              <span>Miray</span>
-              <span>Oster</span>
-              <span>Imaco</span>
-              <span>Panasonic</span>
-              <span>Midea</span>
-            </div>
-          </div>
-
-          <div>
+          <div className="md:col-span-5 lg:col-span-4">
             <div className="text-xs font-bold uppercase tracking-wider text-white mb-3">
               Atención Directa por WhatsApp
             </div>
-            <div className="space-y-2 text-xs text-slate-400">
+            <div className="space-y-2.5 text-xs text-slate-400">
               <a
                 href="https://wa.me/51994516143"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold"
+                className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5 fill-current" />
+                <WhatsAppIcon className="w-4 h-4 fill-current" />
                 <span>Chat de Ventas por WhatsApp</span>
               </a>
               <div className="flex items-center gap-2">
