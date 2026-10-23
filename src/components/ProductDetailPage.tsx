@@ -80,7 +80,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   }, [isLightboxOpen]);
 
   const productUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(product.modelo || product.id)}`
+    ? `${window.location.origin}/p/${encodeURIComponent(product.modelo || product.id)}`
     : '';
 
   const handleShare = async () => {

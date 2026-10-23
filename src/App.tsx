@@ -67,17 +67,20 @@ export default function App() {
     setSelectedProduct(prod);
     if (prod) {
       const modelSlug = prod.modelo || prod.id;
-      const newUrl = `${window.location.pathname}?p=${encodeURIComponent(modelSlug)}`;
+      const newUrl = `/?p=${encodeURIComponent(modelSlug)}`;
       window.history.pushState({ productId: prod.id }, '', newUrl);
     } else {
-      window.history.pushState(null, '', window.location.pathname);
+      window.history.pushState(null, '', '/');
     }
   };
 
-  // Open product from URL query on initial load (?p=MODEL)
+  // Open product from URL query or path on initial load (?p=MODEL or /p/MODEL)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const pParam = params.get('p');
+    const pathMatch = window.location.pathname.match(/\/p\/([^/]+)/);
+    const pathModel = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
+    const pParam = params.get('p') || pathModel;
+
     if (pParam && products.length > 0) {
       const decoded = decodeURIComponent(pParam).trim().toLowerCase();
       const found = products.find(
@@ -93,7 +96,10 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
-      const pParam = params.get('p');
+      const pathMatch = window.location.pathname.match(/\/p\/([^/]+)/);
+      const pathModel = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
+      const pParam = params.get('p') || pathModel;
+
       if (pParam && products.length > 0) {
         const decoded = decodeURIComponent(pParam).trim().toLowerCase();
         const found = products.find(
