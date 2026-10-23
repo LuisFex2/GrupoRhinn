@@ -10,14 +10,29 @@ import { ProductDetailPage } from './components/ProductDetailPage';
 import { CartDrawer } from './components/CartDrawer';
 import { CategoryDrawer } from './components/CategoryDrawer';
 import { Footer } from './components/Footer';
-import { WhatsAppIcon } from './components/WhatsAppIcon';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowUp } from 'lucide-react';
 
 export default function App() {
   // Initialize with cached products if available, or bundled products as immediate fallback
   const [products, setProducts] = useState<Product[]>(() => {
     return getCachedProducts() || catalogProducts;
   });
+
+  // Floating "Subir" (Scroll to Top) button visibility
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 350);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Load latest live data from Google Sheets on initial load
   useEffect(() => {
@@ -307,19 +322,19 @@ export default function App() {
         </>
       )}
 
-      {/* Floating WhatsApp Action Button */}
-      <a
-        href="https://wa.me/51994516143?text=Hola%20GRUPO%20RHINN,%20quisiera%20consultar%20por%20su%20catálogo%20de%20electrodomésticos"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-40 bg-emerald-500 hover:bg-emerald-600 text-white p-3.5 rounded-full shadow-xl flex items-center gap-2 hover:scale-105 transition-all cursor-pointer group"
-        title="Consultar por WhatsApp"
+      {/* Floating "Subir" (Scroll to Top) Action Button */}
+      <button
+        type="button"
+        onClick={scrollToTop}
+        aria-label="Subir a la parte superior"
+        title="Subir a la parte superior"
+        className={`fixed bottom-6 right-6 z-40 bg-slate-900/95 hover:bg-slate-900 text-white px-3.5 py-2.5 rounded-full shadow-2xl flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border border-slate-700/60 backdrop-blur-xs text-xs font-bold ${
+          showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
       >
-        <WhatsAppIcon className="w-5 h-5 fill-current" />
-        <span className="hidden sm:inline text-xs font-bold pr-1">
-          WhatsApp Ventas
-        </span>
-      </a>
+        <ArrowUp className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+        <span>Subir</span>
+      </button>
 
       {/* Categories Slide-Over Drawer (Hamburger Menu) */}
       <CategoryDrawer
