@@ -76,16 +76,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Hover Quick Action Overlay */}
-        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-4">
+        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-4 pointer-events-none">
           <button
             onClick={e => {
               e.stopPropagation();
               onOpenDetails(product);
             }}
-            className="px-3 py-1.5 bg-white text-slate-900 text-xs font-semibold rounded-lg hover:bg-slate-100 shadow-md transition-transform flex items-center gap-1.5 cursor-pointer"
+            className="pointer-events-auto px-3 py-1.5 bg-white/95 hover:bg-white text-slate-900 text-xs font-semibold rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 border border-slate-200/60"
           >
-            <Eye className="w-3.5 h-3.5" />
-            <span>Ver Ficha Completa</span>
+            <Eye className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Ver detalle</span>
           </button>
         </div>
       </div>
