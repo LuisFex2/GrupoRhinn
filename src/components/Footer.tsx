@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, MapPin, Clock, ShieldCheck, Truck } from 'lucide-react';
+import { MapPin, Clock, ShieldCheck, Truck } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 
 export const Footer: React.FC = () => {

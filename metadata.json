@@ -1,6 +1,6 @@
 {
-  "name": "TD-3 ElectroHogar - Catálogo Web",
-  "description": "Catálogo web de electrodomésticos, televisores, refrigeración, lavado y cocinas. Productos nuevos y de exhibición con precios en soles y pedidos por WhatsApp.",
+  "name": "GRUPO RHINN - Catálogo Web",
+  "description": "Catálogo web oficial de electrodomésticos y tecnología para el hogar.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }

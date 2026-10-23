@@ -30,8 +30,6 @@ interface CategoryDrawerProps {
   onClose: () => void;
   selectedCategory: string;
   onSelectCategory: (cat: string) => void;
-  categoryCounts?: Record<string, number>;
-  totalProductsCount?: number;
   otherCategories?: string[];
 }
 

@@ -112,14 +112,6 @@ export default function App() {
     return Array.from(new Set(products.map(p => p.categoria))).sort();
   }, [products]);
 
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const p of products) {
-      counts[p.categoria] = (counts[p.categoria] || 0) + 1;
-    }
-    return counts;
-  }, [products]);
-
   const brands = useMemo(() => {
     return Array.from(new Set(products.map(p => p.marca))).sort();
   }, [products]);
@@ -338,8 +330,6 @@ export default function App() {
           setSelectedCategory(cat);
           handleSelectProduct(null);
         }}
-        categoryCounts={categoryCounts}
-        totalProductsCount={products.length}
         otherCategories={categories}
       />
 
