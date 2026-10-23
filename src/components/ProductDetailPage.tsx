@@ -133,10 +133,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const oldPriceFormatted = `S/ ${referenceOldPrice.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   const commentText = comments.trim() ? `\n💬 Comentarios del cliente: ${comments.trim()}` : '';
 
-  // Direct image and store deep-link for WhatsApp preview
-  const imageUrl = product.thumbnailUrl || product.driveUrl || '';
-  const imageText = imageUrl ? `\n🖼️ Foto: ${imageUrl}` : '';
-  const linkText = productUrl ? `\n🔗 Ver en catálogo: ${productUrl}` : '';
+  const linkText = productUrl ? `\n\n🔗 ${productUrl}` : '';
 
   const whatsappMessage = encodeURIComponent(
     `Hola GRUPO RHINN, deseo hacer el pedido de:\n\n` +
@@ -146,8 +143,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     `🔢 Cantidad: ${quantity} unidad(es)\n` +
     `💰 Total a pagar: ${totalFormatted}` +
     commentText +
-    `\n` +
-    imageText +
     linkText
   );
 

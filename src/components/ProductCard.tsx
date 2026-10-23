@@ -17,9 +17,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const productUrl = typeof window !== 'undefined'
     ? `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(product.modelo || product.id)}`
     : '';
-  const imageUrl = product.thumbnailUrl || product.driveUrl || '';
-  const imageText = imageUrl ? `\n🖼️ Foto: ${imageUrl}` : '';
-  const linkText = productUrl ? `\n🔗 Ver en catálogo: ${productUrl}` : '';
+  const linkText = productUrl ? `\n\n🔗 ${productUrl}` : '';
 
   const directMsg = encodeURIComponent(
     `Hola GRUPO RHINN, deseo consultar o hacer el pedido de:\n\n` +
@@ -27,8 +25,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     `🏷️ Modelo: ${product.modelo}\n` +
     `✨ Condición: ${product.condicion}\n` +
     `💰 Precio: ${product.precioTexto}` +
-    `\n` +
-    imageText +
     linkText
   );
   const whatsappNum = '51994516143';
