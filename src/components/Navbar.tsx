@@ -39,9 +39,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Menú de Categorías"
             >
               <Menu className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.2]" />
-              <span className="hidden lg:inline text-xs font-bold uppercase tracking-wider text-slate-700">
-                Categorías
-              </span>
             </button>
 
             <a
