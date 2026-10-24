@@ -283,8 +283,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </div>
 
                 {/* Description */}
-                <div className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/70 p-4 rounded-xl border border-slate-200">
-                  {product.descripcion}
+                <div className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/70 p-4 rounded-xl border border-slate-200 whitespace-pre-line">
+                  {(product.descripcion || '').replace(/\\n/g, '\n')}
                 </div>
 
                 {/* Order & WhatsApp Module */}
