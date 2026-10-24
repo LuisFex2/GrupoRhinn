@@ -13,6 +13,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOpenDetails,
 }) => {
   const [imageFailed, setImageFailed] = React.useState(false);
+  const referenceOldPrice = Math.round(product.precio * 1.30);
+  const oldPriceFormatted = `S/ ${referenceOldPrice.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   const productUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/p/${encodeURIComponent(product.modelo || product.id)}`
@@ -121,8 +123,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Price and Direct WhatsApp Order Button */}
         <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-dashed border-slate-200">
-          <div className="text-sm sm:text-base font-black text-slate-900 font-mono tabular-nums mb-1.5 sm:mb-2">
-            {product.precioTexto || `S/ ${product.precio.toFixed(2)}`}
+          <div className="mb-1.5 sm:mb-2">
+            <div className="text-[11px] sm:text-xs text-slate-400 line-through font-sans font-normal leading-none mb-0.5">
+              {oldPriceFormatted}
+            </div>
+            <div className="text-sm sm:text-base font-extrabold text-slate-900 font-sans tracking-tight leading-tight">
+              {product.precioTexto || `S/ ${product.precio.toFixed(2)}`}
+            </div>
           </div>
 
           <a

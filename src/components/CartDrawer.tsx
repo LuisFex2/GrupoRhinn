@@ -145,7 +145,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <div className="text-[11px] text-slate-500 font-mono">
                           {item.product.modelo} · {item.product.condicion}
                         </div>
-                        <div className="text-xs font-mono tabular-nums font-semibold text-indigo-700 mt-1">
+                        <div className="text-xs font-sans font-bold text-slate-900 mt-1">
                           S/ {(item.product.precio * item.quantity).toFixed(2)}
                         </div>
                       </div>
@@ -191,7 +191,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="bg-slate-100 p-3.5 rounded-xl border border-slate-200">
                   <div className="flex items-center justify-between text-xs text-slate-600">
                     <span>Subtotal de productos</span>
-                    <span className="font-mono tabular-nums font-bold text-slate-900 text-sm">
+                    <span className="font-sans font-extrabold text-slate-900 text-sm">
                       S/ {totalAmount.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>

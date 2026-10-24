@@ -291,11 +291,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   {/* Price & Quantity Selector */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <div className="flex items-baseline gap-2.5">
-                        <span className="text-xs text-slate-400 line-through font-mono">
+                      <div className="flex items-baseline gap-3">
+                        <span className="text-sm sm:text-base text-slate-400 line-through font-sans font-normal">
                           {oldPriceFormatted}
                         </span>
-                        <span className="text-2xl sm:text-3xl font-black text-indigo-900 font-mono tabular-nums">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-sans tracking-tight">
                           {product.precioTexto || `S/ ${product.precio.toFixed(2)}`}
                         </span>
                       </div>
