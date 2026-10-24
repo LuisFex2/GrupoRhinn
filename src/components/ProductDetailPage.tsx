@@ -135,7 +135,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const totalFormatted = `S/ ${totalAmount.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   const referenceOldPrice = Math.round(product.precio * 1.30);
   const oldPriceFormatted = `S/ ${referenceOldPrice.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  const commentText = comments.trim() ? `\n* Comentarios: ${comments.trim()}` : '';
+  const commentText = comments.trim() ? `\n* Comentarios: *${comments.trim()}*` : '';
 
   const linkText = productUrl ? `\n\n🔗 ${productUrl}` : '';
 

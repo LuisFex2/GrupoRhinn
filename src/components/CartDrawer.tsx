@@ -53,7 +53,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     message += `📍 *Recojo / Ubicación:* ${customerAddress || 'Retiro en almacén / tienda'}\n`;
     message += `💳 *Método de Pago:* ${paymentMethod}\n`;
     if (notes.trim()) {
-      message += `💬 *Notas:* ${notes}\n`;
+      message += `💬 *Notas:* *${notes.trim()}*\n`;
     }
     message += `\n¿Me confirman la disponibilidad para coordinar el pedido?`;
 
