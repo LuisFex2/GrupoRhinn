@@ -105,17 +105,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenCart}
               aria-label="Ver bolsa de compras"
-              className="relative inline-flex items-center gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white transition-all cursor-pointer shadow-sm group"
+              className="relative inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-slate-900/95 hover:bg-slate-900 text-white border border-slate-700/60 backdrop-blur-xs text-xs sm:text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer group"
             >
               <div className="relative">
-                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 group-hover:scale-110 transition-transform" />
+                <ShoppingCart className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-emerald-400 stroke-[2.3] group-hover:scale-110 transition-transform" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono ring-2 ring-white">
+                  <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono ring-2 ring-slate-900">
                     {cartItemCount}
                   </span>
                 )}
               </div>
-              <span className="text-xs sm:text-sm font-semibold">
+              <span className="text-xs sm:text-sm font-bold">
                 {cartItemCount > 0 ? (
                   <span className="hidden xs:inline font-mono">
                     S/ {cartTotal.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

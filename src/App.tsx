@@ -333,7 +333,7 @@ export default function App() {
         onClick={scrollToTop}
         aria-label="Subir a la parte superior"
         title="Subir a la parte superior"
-        className={`fixed bottom-6 right-6 z-40 bg-slate-900/95 hover:bg-slate-900 text-white px-3.5 py-2.5 rounded-full shadow-2xl flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border border-slate-700/60 backdrop-blur-xs text-xs font-bold ${
+        className={`fixed bottom-6 right-6 z-40 bg-slate-900/95 hover:bg-slate-900 text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-md flex items-center gap-2 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border border-slate-700/60 backdrop-blur-xs text-xs sm:text-sm font-bold ${
           showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
