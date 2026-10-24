@@ -20,7 +20,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const linkText = productUrl ? `\n\n🔗 ${productUrl}` : '';
 
   const directMsg = encodeURIComponent(
-    `Hola GRUPO RHINN me interesa comprar:\n\n` +
+    `Hola GRUPO RHINN, me interesa comprar:\n\n` +
     `* Producto: ${product.nombre}\n` +
     `* Modelo: ${product.modelo}\n` +
     `* Condición: ${product.condicion}\n` +
