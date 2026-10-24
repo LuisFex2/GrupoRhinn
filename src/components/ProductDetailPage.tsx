@@ -282,11 +282,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   Condición: <strong className="text-slate-800 font-sans">{product.condicion}</strong>
                 </div>
 
-                {/* Description */}
-                <div className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/70 p-4 rounded-xl border border-slate-200 whitespace-pre-line">
-                  {(product.descripcion || '').replace(/\\n/g, '\n')}
-                </div>
-
                 {/* Order & WhatsApp Module */}
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
                   {/* Price & Quantity Selector */}
@@ -419,7 +414,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       <div className="font-semibold text-slate-900">Medios de Pago</div>
                       <div className="text-[11px] text-slate-500">Yape, Plin, Transferencia BCP / BBVA.</div>
                     </div>
+
                   </div>
+                </div>
+
+                {/* Description */}
+                <div className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/70 p-4 rounded-xl border border-slate-200 whitespace-pre-line">
+                  {(product.descripcion || '').replace(/\\n/g, '\n')}
                 </div>
 
               </div>
