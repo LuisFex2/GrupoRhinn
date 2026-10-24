@@ -136,7 +136,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const linkText = productUrl ? `\n\n🔗 ${productUrl}` : '';
 
   const whatsappMessage = encodeURIComponent(
-    `Hola GRUPO RHINN, deseo hacer el pedido de:\n\n` +
+    `Hola GRUPO RHINN me interesa comprar:\n\n` +
     `* Producto: ${product.nombre}\n` +
     `* Modelo: ${product.modelo}\n` +
     `* Condición: ${product.condicion}\n` +
