@@ -51,7 +51,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       className="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 hover:shadow-md transition-all duration-200 flex flex-col cursor-pointer relative"
     >
       {/* Visual Image Container */}
-      <div className="relative aspect-4/3 bg-white overflow-hidden flex items-center justify-center p-3 border-b border-slate-100">
+      <div className="relative aspect-square bg-white overflow-hidden flex items-center justify-center p-1.5 sm:p-2 border-b border-slate-100">
         {product.thumbnailUrl && !imageFailed ? (
           <img
             src={product.thumbnailUrl}
@@ -87,14 +87,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Hover Quick Action Overlay */}
-        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-4 pointer-events-none">
+        {/* Hover Quick Action Button (transparent, no watermark or blur) */}
+        <div className="absolute inset-0 bg-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2 pointer-events-none">
           <button
+            type="button"
             onClick={e => {
               e.stopPropagation();
               onOpenDetails(product);
             }}
-            className="pointer-events-auto px-3 py-1.5 bg-white/95 hover:bg-white text-slate-900 text-xs font-semibold rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 border border-slate-200/60"
+            className="pointer-events-auto px-3.5 py-1.5 bg-white/95 hover:bg-white text-slate-900 text-xs font-bold rounded-full shadow-lg hover:shadow-xl transition-all flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 border border-slate-200"
           >
             <Eye className="w-3.5 h-3.5 text-indigo-600" />
             <span>Ver detalle</span>
@@ -106,18 +107,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="p-2.5 sm:p-3.5 flex-1 flex flex-col justify-between">
         <div>
           {/* Brand line */}
-          <div className="text-[10px] sm:text-[11px] font-bold text-sky-600 uppercase tracking-wider mb-0.5">
+          <div className="text-[10px] sm:text-[11px] font-bold text-sky-600 uppercase tracking-wider leading-none mb-1">
             {product.marca}
           </div>
 
           {/* Product Name */}
-          <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-indigo-600 transition-colors min-h-[30px] sm:min-h-[34px]">
+          <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-indigo-600 transition-colors">
             {product.nombre}
           </h3>
 
           {/* Model code */}
-          <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono mt-0.5 truncate">
-            Mod: <span className="text-slate-700">{product.modelo}</span>
+          <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono mt-1 truncate">
+            Mod: <span className="text-slate-700 font-medium">{product.modelo}</span>
           </div>
         </div>
 
