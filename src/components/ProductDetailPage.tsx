@@ -267,27 +267,27 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             </div>
 
             {/* Right Column: Specifications & WhatsApp Order Module */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-5">
-              <div className="space-y-4">
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-3.5 sm:space-y-4">
+              <div className="space-y-1.5 sm:space-y-2">
                 {/* Brand tag */}
-                <div className="text-xs font-bold text-sky-600 uppercase tracking-widest">
+                <div className="text-[10px] sm:text-xs font-bold text-sky-600 uppercase tracking-wider leading-none">
                   {product.marca}
                 </div>
 
                 {/* Product Full Headline */}
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
                   {product.nombre}
                 </h1>
 
-                {/* Subtitle with Model and Condition */}
-                <div className="text-xs sm:text-sm text-slate-500 font-mono">
-                  Modelo: <strong className="text-slate-800 font-mono">{product.modelo}</strong>
-                  <span className="mx-2 text-slate-300">|</span>
-                  Condición: <strong className="text-slate-800 font-sans">{product.condicion}</strong>
+                {/* Subtitle with Model and Condition - Single Line on Mobile */}
+                <div className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 font-sans leading-none pt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                  <span>Mod: <strong className="font-semibold text-slate-800 font-mono">{product.modelo}</strong></span>
+                  <span className="text-slate-300">|</span>
+                  <span>Condición: <strong className="font-semibold text-slate-800 font-sans">{product.condicion}</strong></span>
                 </div>
 
-                {/* Order & WhatsApp Module */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+              {/* Order & WhatsApp Module */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4">
                   {/* Price & Quantity Selector */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
