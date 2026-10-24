@@ -62,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={e => onSearchChange(e.target.value)}
-                placeholder="Buscar en Grupo Rhinn (marca, modelo, televisor...)"
+                placeholder="¿Qué estás buscando?"
                 className="w-full pl-11 pr-10 py-2.5 sm:py-2.5 bg-slate-50 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-800 rounded-full text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 transition-all shadow-2xs"
               />
               {searchQuery && (
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="text"
               value={searchQuery}
               onChange={e => onSearchChange(e.target.value)}
-              placeholder="Buscar en Grupo Rhinn..."
+              placeholder="¿Qué estás buscando?"
               className="w-full pl-10 pr-9 py-2 bg-slate-50 border border-slate-300 rounded-full text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900"
             />
             {searchQuery && (
