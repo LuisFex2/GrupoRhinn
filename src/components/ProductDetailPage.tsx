@@ -17,6 +17,8 @@ import {
   CheckCircle2,
   ZoomIn,
   X,
+  Info,
+  ChevronDown,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { ProductCard } from './ProductCard';
@@ -48,6 +50,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   // Lightbox modal state: isLightboxOpen opens the modal, isZoomed enlarges it even more on click
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [isSpecsOpen, setIsSpecsOpen] = useState(true);
 
   // Scroll to top on mount or product change, and reset state
   useEffect(() => {
@@ -55,6 +58,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     setImageError(false);
     setIsLightboxOpen(false);
     setIsZoomed(false);
+    setIsSpecsOpen(true);
     setQuantity(1);
     setComments('');
   }, [product.id, product.stock]);
@@ -418,9 +422,32 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   </div>
                 </div>
 
-                {/* Description */}
-                <div className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/70 p-4 rounded-xl border border-slate-200 whitespace-pre-line">
-                  {(product.descripcion || '').replace(/\\n/g, '\n')}
+                {/* Specifications Accordion Box matching reference design */}
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-2xs">
+                  <button
+                    type="button"
+                    onClick={() => setIsSpecsOpen(!isSpecsOpen)}
+                    className="w-full flex items-center justify-between text-left cursor-pointer group"
+                    aria-expanded={isSpecsOpen}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Info className="w-5 h-5 text-slate-800 shrink-0 stroke-[2.2]" />
+                      <span className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
+                        Especificaciones
+                      </span>
+                    </div>
+                    <ChevronDown
+                      className={`w-5 h-5 text-slate-500 group-hover:text-slate-800 transition-transform duration-200 ${
+                        isSpecsOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isSpecsOpen && (
+                    <div className="mt-3.5 pt-3.5 border-t border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line font-normal">
+                      {(product.descripcion || '').replace(/\\n/g, '\n')}
+                    </div>
+                  )}
                 </div>
 
               </div>
