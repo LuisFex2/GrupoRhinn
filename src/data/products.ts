@@ -1,12 +1,24 @@
 import { Product } from '../types/product';
 
+export function parseDriveImages(rawUrl?: string): string[] {
+  if (!rawUrl) return [];
+  const segments = rawUrl.split(',').map(s => s.trim()).filter(Boolean);
+  const results: string[] = [];
+  for (const seg of segments) {
+    const match = seg.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      results.push(`https://lh3.googleusercontent.com/d/${match[1]}=w800`);
+    } else if (seg.startsWith('http')) {
+      results.push(seg);
+    }
+  }
+  return results;
+}
+
 export function getDriveThumbnailUrl(driveUrl?: string): string | null {
   if (!driveUrl) return null;
-  const match = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    return `https://lh3.googleusercontent.com/d/${match[1]}=w800`;
-  }
-  return driveUrl;
+  const parsed = parseDriveImages(driveUrl);
+  return parsed.length > 0 ? parsed[0] : null;
 }
 
 /**
@@ -45,6 +57,9 @@ export function consolidateProducts(items: Product[]): Product[] {
       if (!existing.thumbnailUrl && item.thumbnailUrl) {
         existing.thumbnailUrl = item.thumbnailUrl;
         existing.driveUrl = item.driveUrl;
+      }
+      if ((!existing.images || existing.images.length === 0) && item.images && item.images.length > 0) {
+        existing.images = item.images;
       }
       if (item.destacado) {
         existing.destacado = true;

@@ -12,6 +12,7 @@ import {
   Sparkles,
   CreditCard,
   ChevronRight,
+  ChevronLeft,
   Share2,
   ShoppingBag,
   CheckCircle2,
@@ -47,6 +48,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
+  // Gallery & Carousel multi-image handling
+  const imageList = (product.images && product.images.length > 0)
+    ? product.images
+    : (product.thumbnailUrl ? [product.thumbnailUrl] : []);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const currentImage = imageList[selectedImageIndex] || product.thumbnailUrl || '';
+
   // Lightbox modal state: isLightboxOpen opens the modal, isZoomed enlarges it even more on click
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -56,6 +64,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setImageError(false);
+    setSelectedImageIndex(0);
     setIsLightboxOpen(false);
     setIsZoomed(false);
     setIsSpecsOpen(true);
@@ -209,8 +218,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden p-5 sm:p-8 lg:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
             
-            {/* Left Column: Direct Image Showcase (No restricting inner border box) */}
-            <div className="lg:col-span-7 flex flex-col items-center justify-center relative min-h-[400px] sm:min-h-[520px] lg:min-h-[600px]">
+            {/* Left Column: Direct Image Showcase with Carousel & Thumbnails */}
+            <div className="lg:col-span-7 flex flex-col items-center justify-between relative min-h-[420px] sm:min-h-[540px] lg:min-h-[600px] w-full">
               {/* Condition Kicker Badge */}
               <div className="absolute top-2 left-2 z-10 flex items-center gap-2">
                 <span
@@ -222,28 +231,33 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 >
                   {product.condicion === 'De Exhibición' ? 'De Exhibición' : 'Nuevo'}
                 </span>
+                {imageList.length > 1 && (
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-900/80 text-white shadow-xs backdrop-blur-xs">
+                    {selectedImageIndex + 1} / {imageList.length}
+                  </span>
+                )}
               </div>
 
-              {/* Main Product Image Container - Uses full available space */}
+              {/* Main Product Image Container */}
               <div
                 onClick={() => {
-                  if (product.thumbnailUrl && !imageError) {
+                  if (currentImage && !imageError) {
                     setIsLightboxOpen(true);
                     setIsZoomed(false);
                   }
                 }}
-                className={`w-full h-full flex items-center justify-center relative group p-2 ${
-                  product.thumbnailUrl && !imageError ? 'cursor-zoom-in' : ''
+                className={`w-full flex-1 flex items-center justify-center relative group p-2 select-none ${
+                  currentImage && !imageError ? 'cursor-zoom-in' : ''
                 }`}
                 title="Clic para ampliar"
               >
-                {product.thumbnailUrl && !imageError ? (
+                {currentImage && !imageError ? (
                   <img
-                    src={product.thumbnailUrl}
+                    src={currentImage}
                     alt={product.nombre}
                     onError={() => setImageError(true)}
                     referrerPolicy="no-referrer"
-                    className="max-h-[540px] sm:max-h-[620px] w-auto max-w-full object-contain select-none transition-transform duration-300 group-hover:scale-[1.03]"
+                    className="max-h-[460px] sm:max-h-[540px] lg:max-h-[580px] w-auto max-w-full object-contain select-none transition-all duration-300 group-hover:scale-[1.02]"
                   />
                 ) : (
                   <div className="text-center p-12">
@@ -257,13 +271,68 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   </div>
                 )}
 
-                {product.thumbnailUrl && !imageError && (
+                {/* Prev / Next Carousel Arrow Buttons on Main Image */}
+                {imageList.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : imageList.length - 1));
+                      }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-950 shadow-md flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 border border-slate-200/80"
+                      aria-label="Foto anterior"
+                    >
+                      <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImageIndex((prev) => (prev < imageList.length - 1 ? prev + 1 : 0));
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-950 shadow-md flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 border border-slate-200/80"
+                      aria-label="Siguiente foto"
+                    >
+                      <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </button>
+                  </>
+                )}
+
+                {currentImage && !imageError && (
                   <div className="absolute bottom-2 right-2 bg-slate-900/85 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm transition-opacity opacity-85 group-hover:opacity-100">
                     <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
                     <span className="font-medium">Clic para ampliar</span>
                   </div>
                 )}
               </div>
+
+              {/* Thumbnails Row (Only visible if there is more than 1 image) */}
+              {imageList.length > 1 && (
+                <div className="w-full pt-3 pb-1 border-t border-slate-100">
+                  <div className="flex items-center justify-center gap-2.5 overflow-x-auto py-1 px-2 no-scrollbar">
+                    {imageList.map((imgUrl, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedImageIndex(idx)}
+                        className={`relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all p-1 bg-white cursor-pointer hover:scale-105 ${
+                          selectedImageIndex === idx
+                            ? 'border-indigo-600 ring-2 ring-indigo-200 shadow-sm'
+                            : 'border-slate-200 hover:border-slate-300 opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`${product.nombre} vista ${idx + 1}`}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-contain"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right Column: Specifications & WhatsApp Order Module */}
@@ -522,7 +591,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             {/* Scrollable / Zoomable image viewport (Takes 100% of height, nothing covering top) */}
             <div className="w-full h-full max-h-[86vh] overflow-auto flex items-center justify-center p-1 sm:p-2">
               <img
-                src={product.thumbnailUrl}
+                src={currentImage}
                 alt={product.nombre}
                 referrerPolicy="no-referrer"
                 onClick={() => setIsZoomed(!isZoomed)}
@@ -531,6 +600,35 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 }`}
                 title={isZoomed ? 'Clic para reducir' : 'Clic para agrandar más'}
               />
+              {imageList.length > 1 && !isZoomed && (
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : imageList.length - 1));
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white shadow-lg flex items-center justify-center transition-all cursor-pointer hover:scale-110 active:scale-95"
+                    aria-label="Anterior"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImageIndex((prev) => (prev < imageList.length - 1 ? prev + 1 : 0));
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white shadow-lg flex items-center justify-center transition-all cursor-pointer hover:scale-110 active:scale-95"
+                    aria-label="Siguiente"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 bg-slate-900/80 text-white text-xs px-3 py-1.5 rounded-full shadow-md backdrop-blur-xs">
+                    {selectedImageIndex + 1} de {imageList.length}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

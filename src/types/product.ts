@@ -11,6 +11,7 @@ export interface Product {
   descripcion: string;
   driveUrl?: string;
   thumbnailUrl?: string;
+  images?: string[];
   destacado?: boolean;
 }
 

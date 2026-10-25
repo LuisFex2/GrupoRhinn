@@ -1,5 +1,5 @@
 import { Product } from '../types/product';
-import { getDriveThumbnailUrl, consolidateProducts } from '../data/products';
+import { getDriveThumbnailUrl, parseDriveImages, consolidateProducts } from '../data/products';
 
 export const DEFAULT_SHEET_URL =
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_GOOGLE_SHEET_URL) ||
@@ -170,7 +170,8 @@ export async function fetchProductsFromGoogleSheet(customUrl?: string): Promise<
       `${name} modelo ${model} en condición ${condicion.toLowerCase()}. Disponible en tienda.`
     ).trim();
 
-    const thumbnailUrl = getDriveThumbnailUrl(driveUrl) || undefined;
+    const images = parseDriveImages(driveUrl);
+    const thumbnailUrl = images.length > 0 ? images[0] : (getDriveThumbnailUrl(driveUrl) || undefined);
 
     rawProducts.push({
       id: `gs-${i}-${model || name}`,
@@ -185,6 +186,7 @@ export async function fetchProductsFromGoogleSheet(customUrl?: string): Promise<
       descripcion,
       driveUrl: driveUrl || undefined,
       thumbnailUrl,
+      images: images.length > 0 ? images : (thumbnailUrl ? [thumbnailUrl] : undefined),
       destacado: stock > 5 || priceNum > 1000,
     });
   }
