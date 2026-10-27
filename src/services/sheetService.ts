@@ -148,9 +148,15 @@ export async function fetchProductsFromGoogleSheet(customUrl?: string): Promise<
       ? 'De Exhibición'
       : 'Nuevo';
 
-    // Parse price safely (e.g. "S/ 1,100.00" -> 1100)
+    // Parse price safely (handling "S/.690", "S/.1,050", "S/ 390.00", etc.)
     const rawPrice = (row[colIndex.price] || '').trim();
-    const cleanPriceStr = rawPrice.replace(/,/g, '').replace(/[^0-9.]/g, '');
+    let cleanPriceStr = rawPrice.replace(/^(S\/\.?|PEN|\$)\s*/i, '');
+    if (/^\d{1,3}\.\d{3}$/.test(cleanPriceStr)) {
+      cleanPriceStr = cleanPriceStr.replace('.', '');
+    } else {
+      cleanPriceStr = cleanPriceStr.replace(/,/g, '');
+    }
+    cleanPriceStr = cleanPriceStr.replace(/[^0-9.]/g, '');
     const priceNum = parseFloat(cleanPriceStr) || 0;
     const precioTexto =
       priceNum > 0
