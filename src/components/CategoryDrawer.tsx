@@ -70,7 +70,20 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
   };
 
   const principalIds = new Set(PRINCIPAL_CATEGORIES.map(c => c.id));
-  const remainingCategories = otherCategories.filter(c => !principalIds.has(c) && c !== 'ALL');
+  const remainingCategories = otherCategories.filter(rawCat => {
+    if (!rawCat || rawCat === 'ALL') return false;
+    if (principalIds.has(rawCat)) return false;
+    const c = rawCat.toUpperCase().trim();
+    // Exclude TV variants since they belong to main 'Televisores'
+    if (c === 'TV' || c.startsWith('TV ') || c.startsWith('TV-') || c.includes('TELEVISOR') || c.split(/[\s-]+/).includes('TV')) {
+      return false;
+    }
+    // Exclude washer variants
+    if (c.includes('LAVADORA') || c.includes('LAVA SECA') || c.includes('LAVASECA')) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex" role="dialog" aria-modal="true">

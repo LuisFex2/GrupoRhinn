@@ -201,11 +201,18 @@ export default function App() {
           if (!match) return false;
         }
 
-        // Category filter
+        // Category filter with intelligent group matching
         if (selectedCategory !== 'ALL') {
-          if (selectedCategory === 'TV LED' && (p.categoria === 'TV LED' || p.categoria === 'TV QLED')) {
-            // Include all TVs
-          } else if (p.categoria !== selectedCategory) {
+          const s = selectedCategory.toUpperCase().trim();
+          const c = (p.categoria || '').toUpperCase().trim();
+
+          if (s === 'TV LED' || s === 'TELEVISORES' || s === 'TV') {
+            const isTv = c === 'TV' || c.startsWith('TV ') || c.startsWith('TV-') || c.includes('TELEVISOR') || c.split(/[\s-]+/).includes('TV');
+            if (!isTv) return false;
+          } else if (s === 'LAVADORA' || s === 'LAVADORAS') {
+            const isWasher = c.includes('LAVADORA') || c.includes('LAVA SECA') || c.includes('LAVASECA');
+            if (!isWasher) return false;
+          } else if (c !== s) {
             return false;
           }
         }
