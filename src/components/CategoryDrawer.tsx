@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   X,
   Refrigerator,
+  Snowflake,
   CookingPot,
   Shirt,
   Tv,
@@ -18,6 +19,7 @@ export interface CategoryItem {
 
 export const PRINCIPAL_CATEGORIES: CategoryItem[] = [
   { id: 'REFRIGERADORA', label: 'Refrigeradoras', icon: Refrigerator },
+  { id: 'CONGELADORA', label: 'Congeladoras', icon: Snowflake },
   { id: 'COCINA', label: 'Cocinas', icon: CookingPot },
   { id: 'LAVADORA', label: 'Lavadoras', icon: Shirt },
   { id: 'TV LED', label: 'Televisores', icon: Tv },
@@ -80,6 +82,9 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
     }
     // Exclude washer variants
     if (c.includes('LAVADORA') || c.includes('LAVA SECA') || c.includes('LAVASECA')) {
+      return false;
+    }
+    if (c.includes('CONGELADOR') || c.includes('REFRIGERADOR')) {
       return false;
     }
     return true;

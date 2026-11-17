@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SortOption } from '../types/product';
-import { Tag, Sparkles, X, ArrowUpDown, ChevronDown } from 'lucide-react';
+import { Tag, Sparkles, X, ArrowUpDown, ChevronDown, Link2, Check } from 'lucide-react';
 
 interface ProductFiltersProps {
   selectedCategory: string;
@@ -27,10 +27,21 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   onSelectSort,
   onResetFilters,
 }) => {
+  const [linkCopied, setLinkCopied] = useState(false);
   const isFiltered =
     selectedCategory !== 'ALL' ||
     selectedBrand !== 'ALL' ||
     condition !== 'ALL';
+
+  const handleCopyCategoryLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      window.setTimeout(() => setLinkCopied(false), 1800);
+    } catch {
+      setLinkCopied(false);
+    }
+  };
 
   return (
     <div className="bg-white border-b border-slate-200 py-2.5 sm:py-3 sticky top-18 sm:top-20 z-30 shadow-2xs">
@@ -84,6 +95,18 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             {selectedCategory !== 'ALL' && (
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-900 text-white text-xs font-semibold shadow-xs shrink-0 animate-fade-in border border-blue-900">
                 <span>{selectedCategory}</span>
+                <button
+                  type="button"
+                  onClick={handleCopyCategoryLink}
+                  className="hover:bg-white/20 p-0.5 rounded-full cursor-pointer transition-colors"
+                  title="Copiar enlace de esta categoría"
+                >
+                  {linkCopied ? (
+                    <Check className="w-3.5 h-3.5 text-white" />
+                  ) : (
+                    <Link2 className="w-3.5 h-3.5 text-white" />
+                  )}
+                </button>
                 <button
                   type="button"
                   onClick={() => onSelectCategory('ALL')}

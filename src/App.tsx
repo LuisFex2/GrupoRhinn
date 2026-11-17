@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { catalogProducts } from './data/products';
 import { fetchProductsFromGoogleSheet, getCachedProducts } from './services/sheetService';
 import { Product, CartItem, SortOption } from './types/product';
@@ -11,6 +11,12 @@ import { CartDrawer } from './components/CartDrawer';
 import { CategoryDrawer } from './components/CategoryDrawer';
 import { Footer } from './components/Footer';
 import { AlertCircle, ArrowUp } from 'lucide-react';
+import {
+  buildCatalogUrl,
+  parseCatalogFilters,
+  writeUrl,
+  type CatalogCondition,
+} from './utils/catalogUrl';
 
 export default function App() {
   // Initialize with cached products if available, or bundled products as immediate fallback
@@ -62,66 +68,18 @@ export default function App() {
   // Active full-page product (PDP view)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  // Synchronize browser URL with active product (?p=MODELO)
-  const handleSelectProduct = (prod: Product | null) => {
-    setSelectedProduct(prod);
-    if (prod) {
-      const modelSlug = prod.modelo || prod.id;
-      const newUrl = `/?p=${encodeURIComponent(modelSlug)}`;
-      window.history.pushState({ productId: prod.id }, '', newUrl);
-    } else {
-      window.history.pushState(null, '', '/');
-    }
-  };
+  const initialKnownCategories = Array.from(
+    new Set((getCachedProducts() || catalogProducts).map(p => p.categoria))
+  );
+  const initialUrlFilters = parseCatalogFilters(window.location.search, initialKnownCategories);
 
-  // Open product from URL query or path on initial load (?p=MODEL or /p/MODEL)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const pathMatch = window.location.pathname.match(/\/p\/([^/]+)/);
-    const pathModel = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
-    const pParam = params.get('p') || pathModel;
-
-    if (pParam && products.length > 0) {
-      const decoded = decodeURIComponent(pParam).trim().toLowerCase();
-      const found = products.find(
-        p => (p.modelo && p.modelo.toLowerCase() === decoded) || p.id.toLowerCase() === decoded
-      );
-      if (found) {
-        setSelectedProduct(found);
-      }
-    }
-  }, [products]);
-
-  // Handle browser Back / Forward buttons
-  useEffect(() => {
-    const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      const pathMatch = window.location.pathname.match(/\/p\/([^/]+)/);
-      const pathModel = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
-      const pParam = params.get('p') || pathModel;
-
-      if (pParam && products.length > 0) {
-        const decoded = decodeURIComponent(pParam).trim().toLowerCase();
-        const found = products.find(
-          p => (p.modelo && p.modelo.toLowerCase() === decoded) || p.id.toLowerCase() === decoded
-        );
-        if (found) {
-          setSelectedProduct(found);
-          return;
-        }
-      }
-      setSelectedProduct(null);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [products]);
-
-  // Filter States
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
-  const [selectedBrand, setSelectedBrand] = useState<string>('ALL');
-  const [selectedCondition, setSelectedCondition] = useState<'ALL' | 'Nuevo' | 'De Exhibición'>('ALL');
+  // Filter States (seeded from the URL so a shared link opens already filtered)
+  const [searchQuery, setSearchQuery] = useState(initialUrlFilters.search || '');
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialUrlFilters.category || 'ALL');
+  const [selectedBrand, setSelectedBrand] = useState<string>(initialUrlFilters.brand || 'ALL');
+  const [selectedCondition, setSelectedCondition] = useState<CatalogCondition>(
+    initialUrlFilters.condition || 'ALL'
+  );
   const [sortOption, setSortOption] = useState<SortOption>('destacados');
   // Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -212,6 +170,10 @@ export default function App() {
           } else if (s === 'LAVADORA' || s === 'LAVADORAS') {
             const isWasher = c.includes('LAVADORA') || c.includes('LAVA SECA') || c.includes('LAVASECA');
             if (!isWasher) return false;
+          } else if (s.includes('CONGELADOR')) {
+            if (!c.includes('CONGELADOR')) return false;
+          } else if (s.includes('REFRIGERADOR')) {
+            if (!c.includes('REFRIGERADOR')) return false;
           } else if (c !== s) {
             return false;
           }
@@ -243,13 +205,85 @@ export default function App() {
       });
   }, [products, searchQuery, selectedCategory, selectedBrand, selectedCondition, sortOption]);
 
+  const applyLocationToState = useCallback((productList: Product[]) => {
+    const known = Array.from(new Set(productList.map(p => p.categoria)));
+    const parsed = parseCatalogFilters(window.location.search, known);
+
+    if (parsed.productSlug) {
+      const decoded = decodeURIComponent(parsed.productSlug).trim().toLowerCase();
+      const found = productList.find(
+        p => (p.modelo && p.modelo.toLowerCase() === decoded) || p.id.toLowerCase() === decoded
+      );
+      setSelectedProduct(found || null);
+      return;
+    }
+
+    setSelectedProduct(null);
+    setSelectedCategory(parsed.category || 'ALL');
+    setSelectedBrand(parsed.brand || 'ALL');
+    setSelectedCondition(parsed.condition || 'ALL');
+    setSearchQuery(parsed.search || '');
+  }, []);
+
+  const catalogUrlFrom = (
+    category: string,
+    brand: string,
+    condition: CatalogCondition,
+    search: string
+  ) => buildCatalogUrl({ category, brand, condition, search });
+
+  const handleSelectProduct = (prod: Product | null) => {
+    setSelectedProduct(prod);
+    if (prod) {
+      const modelSlug = prod.modelo || prod.id;
+      writeUrl(`/?p=${encodeURIComponent(modelSlug)}`, 'push');
+      return;
+    }
+    writeUrl(catalogUrlFrom(selectedCategory, selectedBrand, selectedCondition, searchQuery), 'push');
+  };
+
+  const handleSelectCategory = (cat: string) => {
+    setSelectedCategory(cat);
+    setSelectedProduct(null);
+    writeUrl(catalogUrlFrom(cat, selectedBrand, selectedCondition, searchQuery), 'push');
+  };
+
+  const handleSelectBrand = (brand: string) => {
+    setSelectedBrand(brand);
+    writeUrl(catalogUrlFrom(selectedCategory, brand, selectedCondition, searchQuery), 'replace');
+  };
+
+  const handleSelectCondition = (condition: CatalogCondition) => {
+    setSelectedCondition(condition);
+    writeUrl(catalogUrlFrom(selectedCategory, selectedBrand, condition, searchQuery), 'replace');
+  };
+
+  const handleSearchChange = (q: string) => {
+    setSelectedProduct(null);
+    setSearchQuery(q);
+    writeUrl(catalogUrlFrom(selectedCategory, selectedBrand, selectedCondition, q), 'replace');
+  };
+
+  // Open product or catalog filters from the URL when products load / refresh
+  useEffect(() => {
+    applyLocationToState(products);
+  }, [products, applyLocationToState]);
+
+  // Handle browser Back / Forward buttons
+  useEffect(() => {
+    const handlePopState = () => applyLocationToState(products);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [products, applyLocationToState]);
+
   const handleResetFilters = () => {
-    handleSelectProduct(null);
+    setSelectedProduct(null);
     setSearchQuery('');
     setSelectedCategory('ALL');
     setSelectedBrand('ALL');
     setSelectedCondition('ALL');
     setSortOption('destacados');
+    writeUrl('/', 'push');
   };
 
   return (
@@ -261,10 +295,7 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenCategories={() => setIsCategoryDrawerOpen(true)}
         searchQuery={searchQuery}
-        onSearchChange={q => {
-          handleSelectProduct(null); // Return to catalog on search
-          setSearchQuery(q);
-        }}
+        onSearchChange={handleSearchChange}
       />
 
       {/* Main Content Router: Full Product Detail Page OR Catalog */}
@@ -287,12 +318,12 @@ export default function App() {
           {/* Compact Filter Bar */}
           <ProductFilters
             selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
+            onSelectCategory={handleSelectCategory}
             brands={brands}
             selectedBrand={selectedBrand}
-            onSelectBrand={setSelectedBrand}
+            onSelectBrand={handleSelectBrand}
             condition={selectedCondition}
-            onSelectCondition={setSelectedCondition}
+            onSelectCondition={handleSelectCondition}
             sortOption={sortOption}
             onSelectSort={setSortOption}
             onResetFilters={handleResetFilters}
@@ -353,10 +384,7 @@ export default function App() {
         isOpen={isCategoryDrawerOpen}
         onClose={() => setIsCategoryDrawerOpen(false)}
         selectedCategory={selectedCategory}
-        onSelectCategory={cat => {
-          setSelectedCategory(cat);
-          handleSelectProduct(null);
-        }}
+        onSelectCategory={handleSelectCategory}
         otherCategories={categories}
       />
 
